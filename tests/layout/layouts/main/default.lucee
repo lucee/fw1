@@ -1,1 +1,1 @@
-<cfoutput>[layout]#trim(body)#[/layout]</cfoutput>
+<:output>[layout]#trim(body)#[/layout]</:output>

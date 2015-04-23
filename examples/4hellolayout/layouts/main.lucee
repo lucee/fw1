@@ -1,1 +1,1 @@
-<cfoutput><div style="border: solid blue 1px;">#body#</div></cfoutput>
+<:output><div style="border: solid blue 1px;">#body#</div></:output>

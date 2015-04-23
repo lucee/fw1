@@ -1,4 +1,4 @@
-<cfparam name="rc.message" default="#arrayNew(1)#">
+<:param name="rc.message" default="#arrayNew(1)#">
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -13,33 +13,33 @@
 	<h1>User Manager with Access Control</h1>
 
 	<ul class="nav horizontal clear">
-		<cfif structKeyExists( session, "auth" ) and session.auth.isLoggedIn>
+		<:if structKeyExists( session, "auth" ) and session.auth.isLoggedIn>
 			<li><a href="index.lucee">Home</a></li>
-			<cfif session.auth.user.getRoleId() is 1>
+			<:if session.auth.user.getRoleId() is 1>
 				<li><a href="index.lucee?action=user.list" title="View the list of users">Users</a></li>
 				<li><a href="index.lucee?action=user.form" title="Fill out form to add new user">Add User</a></li>
-			</cfif>
+			</:if>
 			<li><a href="index.lucee?action=main.password" title="Fill out form to change your password">Change Password</a></li>
 			<li><a href="index.lucee?action=login.logout" title="Logout">Logout</a></li>
-		<cfelse>
+		<:else>
 			<li><a href="index.lucee?action=login" title="Login">Login</a></li>
-		</cfif>
+		</:if>
 		<li><a href="index.lucee?reload=true" title="Resets framework cache">Reload</a></li>
 	</ul>
 
 	<br />
 
 	<div id="primary">
-		<cfoutput>
+		<:output>
 			<!--- display any messages to the user --->
-			<cfif not arrayIsEmpty(rc.message)>
-				<cfloop array="#rc.message#" index="msg">
+			<:if not arrayIsEmpty(rc.message)>
+				<:loop array="#rc.message#" index="msg">
 					<p>#msg#</p>
-				</cfloop>
-			</cfif>
+				</:loop>
+			</:if>
 
 			#body#
-		</cfoutput>
+		</:output>
 	</div>
 
 </div>

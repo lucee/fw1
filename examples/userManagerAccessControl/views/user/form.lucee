@@ -1,10 +1,10 @@
-<cfset local.user = rc.user>
-<cfset local.depts = rc.departments>
-<cfset local.roles = rc.roles>
+<:set local.user = rc.user>
+<:set local.depts = rc.departments>
+<:set local.roles = rc.roles>
 
 <h3>User Info</h3>
 
-<cfoutput>
+<:output>
 <form class="familiar medium" method="post" action="index.lucee?action=user.save">
 
 	<input type="hidden" name="id" value="#local.user.getId()#">
@@ -27,47 +27,47 @@
 	<div class="field">
 		<label for="departmentId" class="label">Department:</label>
 		<select name="departmentId" id="departmentId">
-			<cfloop collection="#local.depts#" item="local.id">
+			<:loop collection="#local.depts#" item="local.id">
 
-				<cfset local.dept = local.depts[local.id]>
+				<:set local.dept = local.depts[local.id]>
 
 				<!--- when editing a user we need to set the dept that user currently has --->
-				<cfif local.id EQ local.user.getDepartmentId()>
+				<:if local.id EQ local.user.getDepartmentId()>
 					<option value="#local.id#" selected="selected">#local.dept.getName()#</option>
-				<cfelse>
+				<:else>
 					<option value="#local.id#">#local.dept.getName()#</option>
-				</cfif>
-            </cfloop>
+				</:if>
+            </:loop>
 		</select>
 	</div>
 
 	<div class="field">
 		<label for="roleId" class="label">Role:</label>
 		<select name="roleId" id="roleId">
-			<cfloop collection="#local.roles#" item="local.id">
+			<:loop collection="#local.roles#" item="local.id">
 
-				<cfset local.role = local.roles[local.id]>
+				<:set local.role = local.roles[local.id]>
 
 				<!--- when editing a user we need to set the role that user currently has --->
-				<cfif local.id EQ local.user.getRoleId()>
+				<:if local.id EQ local.user.getRoleId()>
 					<option value="#local.id#" selected="selected">#local.role.getName()#</option>
-				<cfelse>
+				<:else>
 					<option value="#local.id#">#local.role.getName()#</option>
-				</cfif>
-      </cfloop>
+				</:if>
+      </:loop>
 		</select>
 	</div>
 
-	<cfif not local.user.getId()>
+	<:if not local.user.getId()>
 	<div class="field">
 		<label for="password" class="label">Password:</label>
 		<input type="text" name="password" id="password">
 	</div>
-	</cfif>
+	</:if>
 
 	<div class="control">
 		<input type="submit" value="Save User">
 	</div>
 
 </form>
-</cfoutput>
+</:output>

@@ -1,20 +1,20 @@
-<cfset rc.pagetitle = "Ask a Question">
-<cfparam name="rc.title" default="">
-<cfparam name="rc.text" default="">
+<:set rc.pagetitle = "Ask a Question">
+<:param name="rc.title" default="">
+<:param name="rc.text" default="">
 
 <h1>Ask a Question</h1>
 
-<cfif structKeyExists(rc, "errors")>
+<:if structKeyExists(rc, "errors")>
 	<p>
 	<b>Your question coult not be posted due to the following error(s):</b><br/>
 	<ul>
-	<cfloop index="e" array="#rc.errors#">
-		<cfoutput><li>#e#</li></cfoutput>
-	</cfloop>
+	<:loop index="e" array="#rc.errors#">
+		<:output><li>#e#</li></:output>
+	</:loop>
 	</ul>
-</cfif>
+</:if>
 
-<cfoutput>
+<:output>
 <form action="?#framework.action#=question.post" method="post">
 <p>
 Give your question a simple, appropriate title.<br/>
@@ -30,4 +30,4 @@ Now enter the text of your question. Be as clear as possible.<br/>
 <input type="submit" value="Post Question">
 </p>
 </form>
-</cfoutput>
+</:output>

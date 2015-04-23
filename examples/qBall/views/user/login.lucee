@@ -1,22 +1,22 @@
-<cfset rc.pagetitle = "Login/Register">
-<cfparam name="rc.username" default="">
-<cfparam name="rc.email" default="">
-<cfparam name="rc.password" default="">
-<cfoutput>
+<:set rc.pagetitle = "Login/Register">
+<:param name="rc.username" default="">
+<:param name="rc.email" default="">
+<:param name="rc.password" default="">
+<:output>
 
 <h2>Login</h2>
 <p>
 Existing users can login using the form below:
 </p>
-<cfif structKeyExists(rc, "loginerrors")>
+<:if structKeyExists(rc, "loginerrors")>
     <p>
     <b>Your login could not be completed due to the following error(s):</b><br/>
     <ul>
-    <cfloop index="e" array="#rc.loginerrors#">
+    <:loop index="e" array="#rc.loginerrors#">
         <li>#e#</li>
-    </cfloop>
+    </:loop>
     </ul>
-</cfif>
+</:if>
 
 <form action="#buildUrl('user.authenticate')#" method="post">
 <b>username:</b> <input type="text" name="username" value="#rc.username#"><br/>
@@ -28,15 +28,15 @@ Existing users can login using the form below:
 <p>
 New users can register using the form below. All fields are required.
 </p>
-<cfif structKeyExists(rc, "registererrors")>
+<:if structKeyExists(rc, "registererrors")>
     <p>
     <b>Your registration could not be completed due to the following error(s):</b><br/>
     <ul>
-    <cfloop index="e" array="#rc.registererrors#">
+    <:loop index="e" array="#rc.registererrors#">
         <li>#e#</li>
-    </cfloop>
+    </:loop>
     </ul>
-</cfif>
+</:if>
 
 <form action="#buildUrl('user.register')#" method="post">
 <b>username:</b> <input type="text" name="username" value="#rc.username#"><br/>
@@ -45,4 +45,4 @@ New users can register using the form below. All fields are required.
 <b>email:</b> <input type="text" name="email" value="#rc.email#"><br/>
 <input type="submit" value="Register">
 </form>
-</cfoutput>
+</:output>

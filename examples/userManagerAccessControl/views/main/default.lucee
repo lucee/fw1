@@ -1,5 +1,5 @@
-﻿<cfif structKeyExists(rc, "reload")>
+﻿<:if structKeyExists(rc, "reload")>
 	<p>The framework cache (and application scope) have been reset.</p>
-</cfif>
+</:if>
 
-<cfoutput><p>Welcome, #session.auth.fullname#</p></cfoutput>
+<:output><p>Welcome, #session.auth.fullname#</p></:output>

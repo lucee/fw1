@@ -4,13 +4,13 @@ p, h1, h2 {
 }
 </style>
 <h1>This is the green layout.</h1>
-<cfoutput>
+<:output>
 	#body#
 	<p>Go to 
-		<a href="<cfoutput>#buildUrl( '' )#</cfoutput>">default page</a> |
-		<a href="<cfoutput>#buildUrl( '.second' )#</cfoutput>">second page</a>.</p>
+		<a href="<:output>#buildUrl( '' )#</:output>">default page</a> |
+		<a href="<:output>#buildUrl( '.second' )#</:output>">second page</a>.</p>
 	<p>Select skin:
 		<a href="#buildUrl( action = request.action, queryString = 'skin=blue' )#">blue</a> |
 		<a href="#buildUrl( action = request.action, queryString = 'skin=green' )#">green</a> |
 		<a href="#buildUrl( action = request.action, queryString = 'skin=default' )#">default</a>.</p>
-</cfoutput>
+</:output>

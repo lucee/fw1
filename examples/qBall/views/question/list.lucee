@@ -1,44 +1,44 @@
-<cfset rc.pagetitle = "All Questions">
+<:set rc.pagetitle = "All Questions">
 <!--- rc.data is a struct containing the total num of questions and our page --->
-<cfset questions = rc.result.data>
-<cfset totalquestions = rc.result.count>
-<cfparam name="rc.start" default="1">
+<:set questions = rc.result.data>
+<:set totalquestions = rc.result.count>
+<:param name="rc.start" default="1">
 
 
 <h1>All Questions</h1>
 
-<cfif totalquestions is 0>
+<:if totalquestions is 0>
     <p>
     Sorry, there are no questions!
     </p>
-<cfelse>
+<:else>
 
-    <cfif totalquestions gt arrayLen(questions)>
-        <cfoutput>
+    <:if totalquestions gt arrayLen(questions)>
+        <:output>
         <p class="pagination">
-        <cfif rc.start neq 1>
+        <:if rc.start neq 1>
             <a href="?#framework.action#=question.list&start=#rc.start-10#">Previous</a>
-        <cfelse>
+        <:else>
             Previous
-        </cfif>
+        </:if>
         -
-        <cfif (rc.start + 9) lt totalquestions>
+        <:if (rc.start + 9) lt totalquestions>
             <a href="?#framework.action#=question.list&start=#rc.start+10#">Next</a>
-        <cfelse>
+        <:else>
             Next
-        </cfif>
+        </:if>
         </p>
-        </cfoutput>
-    </cfif>
+        </:output>
+    </:if>
 
-    <cfloop index="q" array="#questions#">
+    <:loop index="q" array="#questions#">
         <p>
-        <cfoutput>
-        <a href="?#framework.action#=question.view&questionid=#q.getId()#">#q.getTitle()#</a> <cfif q.getAnswered()><b>Answered</b></cfif><br/>
+        <:output>
+        <a href="?#framework.action#=question.view&questionid=#q.getId()#">#q.getTitle()#</a> <:if q.getAnswered()><b>Answered</b></:if><br/>
         Asked by #q.getUser().getUsername()# on #dateFormat(q.getCreated(), "mmmm d, yyyy")# at #timeFormat(q.getCreated(), "h:mm tt")#
-        </cfoutput>
+        </:output>
         </p>
-    </cfloop>
+    </:loop>
 
 
-</cfif>
+</:if>

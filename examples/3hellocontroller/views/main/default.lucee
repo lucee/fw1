@@ -1,1 +1,1 @@
-<cfoutput>Hello #rc.name#!</cfoutput>
+<:output>Hello #rc.name#!</:output>

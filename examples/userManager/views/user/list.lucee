@@ -1,6 +1,6 @@
-<cfset local.users = rc.data>
+<:set local.users = rc.data>
 
-<cfoutput>
+<:output>
 <table border="0" cellspacing="0">
 	<col width="40" />
 	<thead>
@@ -13,12 +13,12 @@
 		</tr>
 	</thead>
 	<tbody>
-		<cfif structCount(local.users) EQ 0>
+		<:if structCount(local.users) EQ 0>
 			<tr><td colspan="5">No users exist but <a href="index.lucee?action=user.form">new ones can be added</a>.</td></tr>
-		</cfif>
-		<cfloop collection="#local.users#" item="local.id">
+		</:if>
+		<:loop collection="#local.users#" item="local.id">
 			
-			<cfset local.user = local.users[local.id]>
+			<:set local.user = local.users[local.id]>
 			
 			<tr>
 				<td><a href="index.lucee?action=user.form&id=#local.id#">#local.id#</a></td>
@@ -27,7 +27,7 @@
 				<td>#local.user.getDepartment().getName()#</td>
 				<td><a href="index.lucee?action=user.delete&id=#local.id#">DELETE</a></td>
 			</tr>
-		</cfloop>
+		</:loop>
 	</tbody>
 </table>
-</cfoutput>
+</:output>

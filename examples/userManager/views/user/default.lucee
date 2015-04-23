@@ -1,5 +1,5 @@
-<p><cfoutput>#rc.message#</cfoutput></p>
+<p><:output>#rc.message#</:output></p>
 
-<cfif structKeyExists(rc, "reload")>
+<:if structKeyExists(rc, "reload")>
 	<p>The framework cache (and application scope) have been reset.</p>
-</cfif>
+</:if>

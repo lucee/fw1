@@ -1,9 +1,9 @@
-<cfset local.user = rc.user>
-<cfset local.depts = rc.departments>
+<:set local.user = rc.user>
+<:set local.depts = rc.departments>
 
 <h3>User Info</h3>
 
-<cfoutput>
+<:output>
 <form id="userForm" class="familiar medium" method="post" action="index.lucee?action=user.save">
 	
 	<input type="hidden" name="id" value="#local.user.getId()#">
@@ -26,17 +26,17 @@
 	<div class="field">
 		<label for="departmentId" class="label">Department:</label>
 		<select name="departmentId" id="departmentId">
-			<cfloop collection="#local.depts#" item="local.id">
+			<:loop collection="#local.depts#" item="local.id">
 				
-				<cfset local.dept = local.depts[local.id]>
+				<:set local.dept = local.depts[local.id]>
 				
 				<!--- when editing a user we need to set the dept that user currently has --->
-				<cfif local.id EQ local.user.getDepartmentId()>
+				<:if local.id EQ local.user.getDepartmentId()>
 					<option value="#local.id#" selected="selected">#local.dept.getName()#</option>
-				<cfelse>
+				<:else>
 					<option value="#local.id#">#local.dept.getName()#</option>
-				</cfif>
-            </cfloop>
+				</:if>
+            </:loop>
 		</select>
 	</div>
 	
@@ -45,4 +45,4 @@
 	</div>
 	
 </form>
-</cfoutput>
+</:output>

@@ -23,7 +23,7 @@
 	<br />
 	
 	<div id="primary">
-		<cfoutput>#body#</cfoutput>
+		<:output>#body#</:output>
 	</div>
 	
 </div>

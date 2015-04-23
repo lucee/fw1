@@ -1,11 +1,11 @@
 <!--- give an indication that we have reloaded the application (cleared its cache) --->
-<cfif structKeyExists(rc, "reload")>
+<:if structKeyExists(rc, "reload")>
 	
 	<p><strong>The framework cache (and application scope) have been reset.</strong></p>
 	
-</cfif>
+</:if>
 
-<p><cfoutput>#rc.message#</cfoutput></p>
+<p><:output>#rc.message#</:output></p>
 
 <p>This version of the User Manager demo is powered by jQuery to 
 demonstrate an accessible application that isn't dependent on JavaScript. 

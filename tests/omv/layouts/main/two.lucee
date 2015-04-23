@@ -1,1 +1,1 @@
-<cfoutput>TWO#body#</cfoutput>
+<:output>TWO#body#</:output>
