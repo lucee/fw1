@@ -1,5 +1,6 @@
 <ul>
-	<:output query="rc.files">
+	<:output>
+	<:loop query="#rc.files#">
 		<!--- updated to omit common/home which are part of the subsystems demo --->
 		<:if rc.files.type is 'dir' and left(rc.files.name,1) is not '.' and
 				rc.files.name is not 'common' and rc.files.name is not 'home'>
@@ -13,6 +14,7 @@
                 </:if>
 			</li>
 		</:if>
+	</:loop>
 	</:output>
 	<li><a href="examples/index.lucee">Examples as subsystems</a> - reuses some of the examples "as-is".</li>
 </ul>
