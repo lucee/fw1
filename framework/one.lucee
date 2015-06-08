@@ -770,7 +770,6 @@ component {
         var _data_fw1 = 0;
         var once = { };
         var n = 0;
-
         request._fw1.controllerExecutionStarted = true;
         try {
             n = arrayLen( request._fw1.controllers );
@@ -801,7 +800,9 @@ component {
 
         if ( structKeyExists( request._fw1, 'renderData' ) ) {
             out = renderDataWithContentType();
-        } else {
+        } 
+        else {
+
             buildViewQueue();
             internalFrameworkTrace( 'setupView() called' );
             setupView( rc = request.context );
@@ -1540,16 +1541,15 @@ component {
                         if ( section == variables.magicApplicationController ) {
                             // treat this (Application.lucee) as a controller:
                             cfc = this;
-                        } else if ( cachedFileExists( cfcFilePath( request.cfcbase ) & subsystemDir & 'controllers/' & section & '.cfc' ) ) {
+                        } else if ( cachedFileExists( cfcFilePath( request.cfcbase ) & subsystemDir & 'controllers/' & section & '.lucee' ) ) {
                             // we call createObject() rather than new so we can control initialization:
                             if ( request.cfcbase == '' ) {
-                                cfc = createObject( 'component', subsystemDot & 'controllers.' & section );
+                                local.compPath=subsystemDot & 'controllers.' & section;
                             } else {
-                                cfc = createObject( 'component', request.cfcbase & '.' & subsystemDot & 'controllers.' & section );
+                                local.compPath=request.cfcbase & '.' & subsystemDot & 'controllers.' & section;
                             }
-                            if ( structKeyExists( cfc, 'init' ) ) {
-                                cfc.init( this );
-                            }
+                            // init component
+                            cfc=ObjectNew(compPath,[this]);
                         }
                         if ( isObject( cfc ) && ( hasDefaultBeanFactory() || hasSubsystemBeanFactory( subsystem ) ) ) {
                             autowire( cfc, getBeanFactory( subsystem ) );
