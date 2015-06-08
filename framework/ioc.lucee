@@ -70,19 +70,19 @@ component {
     }
     
     
-    // programmatically register new beans with the factory (add an actual CFC)
+    // programmatically register new beans with the factory (add an actual component)
     public any function declareBean( string beanName, string dottedPath, boolean isSingleton = true, struct overrides = { } ) {
         discoverBeans( variables.folders );
         var singleDir = '';
         if ( listLen( dottedPath, '.' ) > 1 ) {
-            var cfc = listLast( dottedPath, '.' );
-            var dottedPart = left( dottedPath, len( dottedPath ) - len( cfc ) - 1 );
+            var component = listLast( dottedPath, '.' );
+            var dottedPart = left( dottedPath, len( dottedPath ) - len( component ) - 1 );
             singleDir = singular( listLast( dottedPart, '.' ) );
         }
-        var cfcPath = replace( expandPath( '/' & replace( dottedPath, '.', '/', 'all' ) & '.lucee' ), chr(92), '/', 'all' );
+        var componentPath = replace( expandPath( '/' & replace( dottedPath, '.', '/', 'all' ) & '.lucee' ), chr(92), '/', 'all' ); // TODO externalize the .lucee
         var metadata = { 
             name = beanName, qualifier = singleDir, isSingleton = isSingleton, 
-            path = cfcPath, cfc = dottedPath, metadata = cleanMetadata( dottedPath ),
+            path = componentPath, component = dottedPath, metadata = cleanMetadata( dottedPath ),
             overrides = overrides
         };
         variables.beanInfo[ beanName ] = metadata;
@@ -248,7 +248,7 @@ component {
                 qualifiedName = info.name & info.qualifier;
             }
             if ( !structKeyExists( variables.beanCache, qualifiedName ) ) {
-                variables.beanCache[ qualifiedName ] = construct( info.lucee );
+                variables.beanCache[ qualifiedName ] = construct( info.component );
                 newObject = true;
             }
             return { bean = variables.beanCache[ qualifiedName ], newObject = newObject };
@@ -258,8 +258,8 @@ component {
     }
 
     
-    private struct function cleanMetadata( string cfc ) {
-        var baseMetadata = metadata( cfc );
+    private struct function cleanMetadata( string component ) {
+        var baseMetadata = metadata( component );
         var iocMeta = { setters = { }, pruned = false };
         var md = { extends = baseMetadata };
         do {
@@ -321,7 +321,7 @@ component {
 
     // in case an extension point wants to override actual construction:
     private any function construct( string dottedPath ) {
-        return createObject( 'component', dottedPath );
+        return objectNew(dottedPath );
     }
     
     
@@ -332,17 +332,17 @@ component {
     
     
     private string function deduceDottedPath( string baseMapping, string basePath ) {
-        var cfcPath = left( baseMapping, 1 ) == '/' ?
+        var componentPath = left( baseMapping, 1 ) == '/' ?
             ( len( baseMapping ) > 1 ? right( baseMapping, len( baseMapping ) - 1 ) : '' ) :
             getFileFromPath( baseMapping );
         var expPath = basePath;
         var dotted = '';
         do {
-            var mapped = cfcPath;
+            var mapped = componentPath;
             if ( len( mapped ) && left( mapped, 1 ) != '.' ) mapped = '/' & mapped;
             var mappedPath = replace( expandpath( mapped ), chr(92), '/', 'all' );
             if ( mappedPath == basePath ) {
-                dotted = replace( cfcPath, '/', '.', 'all' );
+                dotted = replace( componentPath, '/', '.', 'all' );
                 break;
             }
             var prevPath = expPath;
@@ -352,7 +352,7 @@ component {
             }
             var progress = prevPath != expPath;
             var piece = listLast( expPath, '/' );
-            cfcPath = piece & '/' & cfcPath;
+            componentPath = piece & '/' & componentPath;
         } while ( progress );
         if ( dotted == '' ) {
             throw 'unable to deduce dot-relative path for: #baseMapping# (#basePath#) root #expandPath("/")#';
@@ -379,32 +379,32 @@ component {
     private void function discoverBeansInFolder( string mapping ) {
         var folder = replace( expandPath( mapping ), chr(92), '/', 'all' );
         var dotted = deduceDottedPath( mapping, folder );
-        var cfcs = [ ];
+        var components = [ ];
         try {
-            cfcs = directoryList( folder, variables.config.recurse, 'path', '*.lucee' );
+            components = directoryList( folder, variables.config.recurse, 'path', '*.lucee' );
         } catch ( any e ) {
-            // assume bad path - ignore it, cfcs is empty list
+            // assume bad path - ignore it, components is empty list
         }
-        for ( var cfcOSPath in cfcs ) {
-            var cfcPath = replace( cfcOSPath, chr(92), '/', 'all' );
+        for ( var componentOSPath in components ) {
+            var componentPath = replace( componentOSPath, chr(92), '/', 'all' );
             // watch out for excluded paths:
             var excludePath = false;
             for ( var pattern in variables.config.exclude ) {
-                if ( findNoCase( pattern, cfcPath ) ) {
+                if ( findNoCase( pattern, componentPath ) ) {
                     excludePath = true;
                     break;
                 }
             }
             if ( excludePath ) continue;
-            var relPath = right( cfcPath, len( cfcPath ) - len( folder ) );
-            relPath = left( relPath, len( relPath ) - 4 );
-            var dir = listLast( getDirectoryFromPath( cfcPath ), '/' );
+            var relPath = right( componentPath, len( componentPath ) - len( folder ) );
+            relPath = left( relPath, len( relPath ) - 6 );// remove .lucee
+            var dir = listLast( getDirectoryFromPath( componentPath ), '/' );
             var singleDir = singular( dir );
             var beanName = listLast( relPath, '/' );
             var dottedPath = dotted & replace( relPath, '/', '.', 'all' );
             var metadata = { 
                 name = beanName, qualifier = singleDir, isSingleton = !beanIsTransient( singleDir, dir, beanName ), 
-                path = cfcPath, cfc = dottedPath, metadata = cleanMetadata( dottedPath )
+                path = componentPath, component = dottedPath, metadata = cleanMetadata( dottedPath )
             };
             if ( structKeyExists( variables.beanInfo, beanName ) ) {
                 if ( variables.config.omitDirectoryAliases ) {
@@ -422,7 +422,7 @@ component {
     }
     
     
-    private struct function findSetters( any cfc, struct iocMeta ) {
+    private struct function findSetters( any component, struct iocMeta ) {
         var liveMeta = { setters = iocMeta.setters };
         if ( !iocMeta.pruned ) {
             // need to prune known setters of transients:
@@ -434,8 +434,8 @@ component {
             iocMeta.pruned = true;
         }
         // gather up explicit setters:
-        for ( var member in cfc ) {
-            var method = cfc[ member ];
+        for ( var member in component ) {
+            var method = component[ member ];
             var n = len( member );
             if ( isCustomFunction( method ) && left( member, 3 ) == 'set' && n > 3 ) {
                 var property = right( member, n - 3 );
@@ -626,7 +626,7 @@ component {
         if ( structKeyExists( variables.beanInfo, beanName ) ) {
             var info = variables.beanInfo[ beanName ];
             accumulator.dependencies[ beanName ] = { };
-            if ( structKeyExists( info, 'cfc' ) ) {
+            if ( structKeyExists( info, 'component' ) ) {
                 var metaBean = cachable( beanName );
                 var overrides = structKeyExists( info, 'overrides' ) ? info.overrides : { };
                 bean = metaBean.bean;
@@ -669,7 +669,7 @@ component {
                         var __ioc_newBean = evaluate( 'bean.init( argumentCollection = args )' );
                         // if the constructor returns anything, it becomes the bean
                         // this allows for smart constructors that return things other
-                        // than the CFC being created, such as implicit factory beans
+                        // than the component being created, such as implicit factory beans
                         // and automatic singletons etc (rare practices in CFML but...)
                         if ( !isNull( __ioc_newBean ) ) {
                             bean = __ioc_newBean;
